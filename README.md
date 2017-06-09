@@ -6,10 +6,6 @@
 
 Serial interface to GMC (Geiger Muller Counter) from GQ electronics.
 
-## FEATURES/PROBLEMS:
-
-* Seems to work
-
 ## SYNOPSIS:
 
 Dump all history as CSV
@@ -28,7 +24,7 @@ end
 
 ## REQUIREMENTS:
 
-* FIX (list of requirements)
+* gem install ruby-termios
 
 ## INSTALL:
 
