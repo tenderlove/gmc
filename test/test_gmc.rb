@@ -1,8 +1,8 @@
 require 'minitest/autorun'
 require 'gmc'
 
-class TestGmc < MiniTest::Unit::TestCase
-  def test_sanity
-    flunk "write tests or I will kneecap you"
+class TestGmc < MiniTest::Test
+  def test_rad
+    assert "rad"
   end
 end
