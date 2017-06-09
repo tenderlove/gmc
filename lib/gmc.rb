@@ -132,11 +132,31 @@ class GMC
   end
 
   def history
-    @tty.write "<SPIR"
-    @tty.write [0, 0, 0, (2047 >> 8) & 0xff, (2047 >> 0) & 0xff].pack('C5')
-    @tty.write ">>"
-    while IO.select [@tty], nil, nil, 5
-      p @tty.read(1)
+    # https://www.gqelectronicsllc.com/forum/topic.asp?TOPIC_ID=4445
+
+    buf = ''.b
+
+    (0..0x0F0000).step(0x1000).each do |i|
+      3.times do |retries|
+        @tty.write "<SPIR"
+        z = [(0xFF0000 & i) >> 16, (0x00FF00 & i) >> 8, 0x0000FF & i]
+        @tty.write z.pack('C3')
+        @tty.write [0x0f, 0xff].pack('C2')
+        @tty.write ">>"
+        buf_slice = @tty.read 4096
+
+        if buf_slice.nil?
+          $stderr.puts "retrying"
+        else
+          if buf_slice.bytes.all? { |byte| byte == 255 }
+            $stderr.puts "FINISHED"
+            return buf
+          else
+            buf << buf_slice
+            break
+          end
+        end
+      end
     end
   end
 
@@ -219,5 +239,7 @@ class GMC
   end
 end
 
-gmc = GMC.open '/dev/tty.wchusbserial1420'
-p gmc.datetime
+if __FILE__ == $0
+  gmc = GMC.open ARGV[0] || '/dev/tty.wchusbserial14130'
+  print gmc.history
+end
