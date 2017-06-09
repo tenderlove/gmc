@@ -1,28 +1,40 @@
-= gmc
+# gmc
 
 * https://github.com/tenderlove/gmc
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 Serial interface to GMC (Geiger Muller Counter) from GQ electronics.
 
-== FEATURES/PROBLEMS:
+## FEATURES/PROBLEMS:
 
 * Seems to work
 
-== SYNOPSIS:
+## SYNOPSIS:
 
-  FIX (code sample of usage)
+Dump all history as CSV
 
-== REQUIREMENTS:
+```ruby
+require 'csv'
+require 'gmc'
+
+gmc = GMC.open ARGV[0] || '/dev/tty.wchusbserial14130'
+
+CSV do |csv|
+  csv << %w{ time cps cpm uSv }
+  gmc.samples.each { |s| csv << s.to_ary }
+end
+```
+
+## REQUIREMENTS:
 
 * FIX (list of requirements)
 
-== INSTALL:
+## INSTALL:
 
 * FIX (sudo gem install, anything else)
 
-== LICENSE:
+## LICENSE:
 
 (The MIT License)
 
